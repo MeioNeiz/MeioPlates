@@ -1,0 +1,17 @@
+## Interface: 16001
+## Title: MeioPlates
+## Notes: Enemy nameplates show the damage still coming (your cast, each DoT tick by tick) and how many wand shots, Auto Shots, swings or casts are left. /meioplates
+## Category: Meio
+## IconTexture: Interface\Icons\Ability_DualWield
+## AddonCompartmentFunc: MeioPlates_OnAddonCompartmentClick
+## Version: 1.0.0
+## Author: MeioNeiz
+## X-Website: https://github.com/MeioNeiz/MeioPlates
+## X-License: MIT
+## SavedVariables: MeioPlatesDB
+## SavedVariablesPerCharacter: MeioPlatesCharDB
+## OptionalDeps: TidyPlates_ThreatPlates, DoesItDie, ShardKeeper, MeioDPS
+
+Spells.lua
+MeioPlates.lua
+Settings.lua

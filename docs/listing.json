@@ -1,0 +1,24 @@
+{
+  "title": "Meio Plates",
+  "summary": "Enemy nameplates show the damage still coming from you and how many hits it still takes to kill.",
+  "cfCategory": "Combat",
+  "cfExtra": ["Unit Frames"],
+  "wagoCategories": ["Combat", "Unit Frames"],
+  "gallery": [
+    {
+      "file": "before-after.png",
+      "title": "Before and after",
+      "description": "A warlock's two mobs: bare plates, then the Shadow Bolt being cast, each DoT, the wand shots left and a mob the DoTs will kill"
+    },
+    {
+      "file": "hunter.png",
+      "title": "Hunter and pet",
+      "description": "One Auto Shot plus the wolf's damage per band, and the mob's tooltip with Shift held"
+    },
+    {
+      "file": "warrior.png",
+      "title": "Warrior",
+      "description": "Rend's band, then melee swings left to kill"
+    }
+  ]
+}

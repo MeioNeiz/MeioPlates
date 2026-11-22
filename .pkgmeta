@@ -1,8 +1,12 @@
-package-as: WandBar
+package-as: MeioPlates
 
 move-folders:
-  WandBar/addons/WandBar: WandBar
+  MeioPlates/addons/MeioPlates: MeioPlates
 
 ignore:
   - docs
   - README.md
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
