@@ -8,6 +8,8 @@
 ## Author: MeioNeiz
 ## X-Website: https://github.com/MeioNeiz/MeioPlates
 ## X-License: MIT
+## X-Curse-Project-ID: 1824064
+## X-Wago-ID: O67b0YN3
 ## SavedVariables: MeioPlatesDB
 ## SavedVariablesPerCharacter: MeioPlatesCharDB
 ## OptionalDeps: TidyPlates_ThreatPlates, DoesItDie, ShardKeeper, MeioDPS
