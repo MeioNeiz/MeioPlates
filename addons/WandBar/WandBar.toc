@@ -1,0 +1,12 @@
+## Interface: 16001
+## Title: WandBar
+## Notes: Enemy nameplates show the damage still coming: your cast, each DoT tick by tick, one wand shot, and how many shots are left. /wandbar
+## Version: 1.0.0
+## Author: MeioNeiz
+## X-Website: https://github.com/MeioNeiz/WandBar
+## X-License: MIT
+## SavedVariables: WandBarDB
+## OptionalDeps: TidyPlates_ThreatPlates, DoesItDie
+
+Spells.lua
+WandBar.lua

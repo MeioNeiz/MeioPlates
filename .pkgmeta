@@ -1,0 +1,8 @@
+package-as: WandBar
+
+move-folders:
+  WandBar/addons/WandBar: WandBar
+
+ignore:
+  - docs
+  - README.md
