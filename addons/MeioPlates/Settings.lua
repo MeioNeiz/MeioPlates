@@ -93,10 +93,10 @@ local function Register()
             end
             local tip = "The Drain Soul cue shows only while you carry fewer soul shards "
                 .. "than this. /meioplates shards N"
-            local sk = ns.UsesShardKeeper()
+            local sk = ns.UsesMeioShards()
             if sk then
-                tip = "Not used: ShardKeeper is loaded, so its cap applies (Esc > Options > "
-                    .. "AddOns > ShardKeeper, /shards cap N)."
+                tip = "Not used: MeioShards is loaded, so its cap applies (Esc > Options > "
+                    .. "AddOns > MeioShards, /shards cap N)."
             end
             local slider = Settings.CreateSlider(category, setting, options, tip)
             if sk and slider and slider.AddModifyPredicate then

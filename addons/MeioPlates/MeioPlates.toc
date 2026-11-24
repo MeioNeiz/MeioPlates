@@ -4,7 +4,7 @@
 ## Category: Meio
 ## IconTexture: Interface\Icons\Ability_DualWield
 ## AddonCompartmentFunc: MeioPlates_OnAddonCompartmentClick
-## Version: 1.0.0
+## Version: 1.0.1
 ## Author: MeioNeiz
 ## X-Website: https://github.com/MeioNeiz/MeioPlates
 ## X-License: MIT
@@ -12,7 +12,7 @@
 ## X-Wago-ID: O67b0YN3
 ## SavedVariables: MeioPlatesDB
 ## SavedVariablesPerCharacter: MeioPlatesCharDB
-## OptionalDeps: TidyPlates_ThreatPlates, DoesItDie, ShardKeeper, MeioDPS
+## OptionalDeps: TidyPlates_ThreatPlates, DoesItDie, MeioShards, MeioDPS
 
 Spells.lua
 MeioPlates.lua

@@ -186,8 +186,11 @@ local function DirectDamage(spellID, name)
             -- "burns the enemy for 11 fire damage and then ... over 15 sec": the first
             -- "N school damage" that is not periodic
             for n, s, rest in text:gmatch("(%d+) (%a+) damage([^%.]*)") do
+                -- "and draining N mana over" is periodic; Immolate's "and then an
+                -- additional M Fire damage over" names a second amount: this one is direct
                 local periodic = rest:find("^ over") or rest:find("^ after")
-                    or rest:find("^ every") or rest:find("^ and [^,]- over %d")
+                    or rest:find("^ every") or (rest:find("^ and [^,]- over %d")
+                    and not rest:find("^ and [^,]-%d+ %a+ damage"))
                 if SCHOOLS[s] and not periodic then
                     base, school = tonumber(n), s
                     break
@@ -661,12 +664,12 @@ end
 ---------------------------------------------------------------------------
 -- Drain Soul cue
 ---------------------------------------------------------------------------
--- ShardKeeper, when loaded, owns the shard cap (nil from its Cap(): no cap)
-function ns.UsesShardKeeper()
-    return type(ShardKeeper) == "table" and type(ShardKeeper.Cap) == "function"
+-- MeioShards, when loaded, owns the shard cap (nil from its Cap(): no cap)
+function ns.UsesMeioShards()
+    return type(MeioShards) == "table" and type(MeioShards.Cap) == "function"
 end
 
--- ShardKeeper's own count can lag the bag event we count on, so only its cap is borrowed;
+-- MeioShards's own count can lag the bag event we count on, so only its cap is borrowed;
 -- the cap is read live because changing it fires no event here
 local function CountShards()
     if not isWarlock then return end
@@ -683,7 +686,7 @@ end
 -- A shard only comes when there is room for it, and only when you want more
 local function ShardRoom()
     local cap = db.shardCap or DEFAULTS.shardCap
-    if ns.UsesShardKeeper() then cap = ShardKeeper.Cap() end
+    if ns.UsesMeioShards() then cap = MeioShards.Cap() end
     return bagRoom and (not cap or shardCount < cap)
 end
 
@@ -991,12 +994,31 @@ end
 -- Casts
 ---------------------------------------------------------------------------
 
+-- The mob a cast was sent at: SENT names it, so a cast at mouseover or focus (macros) is
+-- told from one at the target. false: an enemy that isn't one of those, so not drawn.
+local AIM_UNITS = { "target", "mouseover", "focus" }
+local function AimedAt(targetName)
+    local named = targetName and canaccess(targetName) and targetName ~= ""
+    for _, unit in ipairs(AIM_UNITS) do
+        local attackable = UnitCanAttack("player", unit)
+        if canaccess(attackable) and attackable then
+            local name = UnitName(unit)
+            if not named or (canaccess(name) and name == targetName) then
+                return ReadableGUID(unit)
+            end
+        end
+        if not named then return end
+    end
+    if named then return false end
+end
+
 -- The mob a cast is aimed at (read when it was sent) and the spell's name, or nil
 local function CastTarget(castGUID, spellID, consume)
     if not (spellID and canaccess(spellID)) then return end
     local okGUID = castGUID and canaccess(castGUID)
     local guid = okGUID and sentTarget[castGUID]
     if consume and okGUID then sentTarget[castGUID] = nil end
+    if guid == false then return end
     local name = C_Spell.GetSpellName(spellID)
     if not (name and canaccess(name)) then return end
     if not guid then
@@ -1267,7 +1289,7 @@ f:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
         end
         for _, e in ipairs({
             "UNIT_RANGEDDAMAGE", "UNIT_INVENTORY_CHANGED", "UNIT_SPELLCAST_SENT",
-            "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_FAILED",
+            "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_FAILED_QUIET",
             "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_CHANNEL_START",
             "UNIT_SPELLCAST_CHANNEL_STOP", "UNIT_PET",
         }) do
@@ -1281,11 +1303,8 @@ f:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
         SetUpDoesItDie()
         SetUpTooltip()
     elseif event == "UNIT_SPELLCAST_SENT" then
-        -- arg3 = castGUID; the target is read now, before a cast time lets it change
-        local attackable = UnitCanAttack("player", "target")
-        if arg3 and canaccess(arg3) and canaccess(attackable) and attackable then
-            sentTarget[arg3] = ReadableGUID("target")
-        end
+        -- arg3 = castGUID; the mob is read now, before a cast time lets it change
+        if arg3 and canaccess(arg3) then sentTarget[arg3] = AimedAt(arg2) end
     elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "pet" then
         OnPetSpellSucceeded(arg3)
     elseif event == "UNIT_PET" then
@@ -1301,7 +1320,8 @@ f:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
         OnChannelStop()
     elseif event == "UNIT_SPELLCAST_START" then
         if db.cast then OnCastStart(arg2, arg3) end
-    elseif event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" then
+    elseif event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_FAILED_QUIET"
+        or event == "UNIT_SPELLCAST_INTERRUPTED" then
         OnCastFailed(arg2)
     elseif event == "NAME_PLATE_UNIT_ADDED" then
         -- let the nameplate addon finish setting up its plate first
@@ -1328,7 +1348,7 @@ f:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
 end)
 
 ---------------------------------------------------------------------------
--- Public API, for other addons (ShardKeeper). Health is never read while it is secret.
+-- Public API, for other addons (MeioShards). Health is never read while it is secret.
 --   MeioPlates.DamageComing(unit) -> number: damage still coming to the mob from you (hit in
 --     flight, channel, DoTs; DoesItDie's sizes when it is loaded), 0 when nothing; nil when
 --     the unit's GUID can't be read
@@ -1484,8 +1504,8 @@ local function PrintHelp()
     end
     print(("  %s - what the attack band and xN count in (now %s)"):format(
         Cmd("/meioplates count auto||wand||shot||melee||spell"), db.count))
-    if isWarlock and ns.UsesShardKeeper() then
-        print(("  %s - unused: ShardKeeper's cap applies (%s)"):format(
+    if isWarlock and ns.UsesMeioShards() then
+        print(("  %s - unused: MeioShards's cap applies (%s)"):format(
             Cmd("/meioplates shards N"), Cmd("/shards cap")))
     elseif isWarlock then
         print(("  %s - Drain Soul cue only below N shards (now %d)"):format(
@@ -1560,8 +1580,8 @@ SlashCmdList.MEIOPLATES = function(msg)
         Say("bands " .. OnOff(db.enabled))
     elseif word == "shards" and tonumber(arg) then
         db.shardCap = math.max(1, math.floor(tonumber(arg)))
-        if ns.UsesShardKeeper() then
-            Say("ShardKeeper's cap applies to the Drain Soul cue: " .. Cmd("/shards cap N"))
+        if ns.UsesMeioShards() then
+            Say("MeioShards's cap applies to the Drain Soul cue: " .. Cmd("/shards cap N"))
         else
             Say(("Drain Soul cue below %d shards"):format(db.shardCap))
         end

@@ -1,5 +1,13 @@
 # Meio Plates
 
+## 1.0.1
+
+- Fixed: a spell cast at your mouseover or focus (macros) drew on your target's nameplate;
+  it now goes on the mob it was cast at
+- Fixed: Immolate's cast band was missing (its damage over time was read as the whole spell)
+- Fixed: a cast that failed without an error message could leave its band on the nameplate
+- Works with Meio Shards for the Drain Soul shard cap
+
 ## 1.0.0
 
 - First release: on enemy nameplates, the damage still coming from you (the spell being
