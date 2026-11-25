@@ -29,6 +29,11 @@ spell tooltips.
 
 Settings: Esc > Options > AddOns > MeioPlates, or `/meioplates`.
 
+## Coming soon
+
+- Works on Plater and Platynator nameplates
+- A skull on the plate when one more hit kills
+
 ## Commands
 
 - `/meioplates help`: the commands; `/meioplates status`: your attacks and DoT colours
