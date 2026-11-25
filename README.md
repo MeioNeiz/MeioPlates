@@ -4,9 +4,10 @@ Enemy nameplates show the damage still coming from you and how many hits the mob
 
 For WoW Forever.
 
-![Two enemy nameplates: before, plain health bars; with Meio Plates, the Shadow Bolt being cast
-in yellow, a band per DoT, "x11" wand shots left on one mob and "kill" on the one the DoTs
-will finish](docs/before-after.png)
+![Two enemy nameplates, the mouse on one with Shift held: before, plain health bars and
+tooltip; with Meio Plates, a band per DoT and the Shadow Bolt being cast, "x11" wand shots
+left, "kill" on the mob the DoTs will finish, and the tooltip naming each band in its
+colour](docs/before-after.png)
 
 ## What it does
 
