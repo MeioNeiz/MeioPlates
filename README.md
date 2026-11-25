@@ -18,6 +18,10 @@ when your DoTs finish it.
 - Yellow is the spell you are casting; each DoT gets its own colour and shrinks tick by tick
 - Pale is one of your main attacks: a wand shot, Auto Shot, melee swing or your main spell,
   plus your pet's damage on the mob it attacks
+
+![A hunter's nameplates: one Auto Shot plus the wolf's damage per band, "x8" to kill, and the
+mob's tooltip with Shift held](docs/hunter.png)
+
 - Hover a mob: its tooltip counts each of your attacks; Shift adds each DoT and hit sizes
 - Warlock and Mage: crowd control timers. Warlock: a soul shard icon when Drain Soul would
   finish the mob
