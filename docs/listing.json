@@ -1,9 +1,14 @@
 {
   "title": "Meio Plates",
-  "summary": "Enemy nameplates show the damage still coming from you and how many hits it still takes to kill.",
+  "summary": "Shows on enemy nameplates how many hits to kill, counting your DoTs and pet.",
   "cfCategory": "Combat",
-  "cfExtra": ["Unit Frames"],
-  "wagoCategories": ["Combat", "Unit Frames"],
+  "cfExtra": [
+    "Unit Frames"
+  ],
+  "wagoCategories": [
+    "Combat",
+    "Unit Frames"
+  ],
   "gallery": [
     {
       "file": "before-after.png",
